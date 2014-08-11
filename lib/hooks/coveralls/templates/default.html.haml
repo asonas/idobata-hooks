@@ -1,0 +1,20 @@
+:ruby
+  coverage_change = payload.coverage_change.to_f
+  coverage_change = coverage_change ? coverage_change : 0.0
+
+  label, message = if coverage_change == 0.0
+    [{ type: nil, text: "Unchanged" }, "Coverage remained the same"]
+  elsif coverage_change > 0
+    [{ type: 'label-success', text: "INCREASES" }, "Coverage has improved (#{coverage_change}%)"]
+  else
+    [{ type: 'label-important', text: "DECREASES" }, "Coverage has declined (#{coverage_change}%)"]
+  end
+
+%p
+  %span.label(class="#{label[:type]}")= label[:text]
+  %img(src="#{payload.badge_url}")
+  = message
+
+%p
+  = precede "#{payload.reponame}" do
+    %a(href="#{payload.url}") #{payload.repo_name}/#{payload.branch} - <span class="commit-id">#{payload.commit_sha[0...7]}</span>
