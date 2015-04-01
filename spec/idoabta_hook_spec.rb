@@ -18,29 +18,31 @@ describe Idobata::Hook do
     end
   end
 
-  describe 'instructions.js.hbs.hamlbars' do
+  describe 'assets compiling' do
     Idobata::Hook.all.each do |hook|
       describe hook do
         subject { hook }
 
-        let(:path) { hook.hook_root.join('instructions.js.hbs.hamlbars').to_s }
+        describe 'style.sass' do
+          it 'should be compiled successfully' do
+            path = hook.hook_root.join('style.sass')
 
-        it 'should be compiled successfully' do
-          Tilt.new(path).render
+            next unless path.exist?
+
+            expect {
+              Tilt.new(path.to_s).render
+            }.to_not raise_error
+          end
         end
-      end
-    end
-  end
 
-  describe 'style.css.sass' do
-    Idobata::Hook.all.each do |hook|
-      describe hook do
-        subject { hook }
+        describe 'help.html.haml' do
+          it 'should be compiled successfully' do
+            path = hook.hook_root.join('help.html.haml')
 
-        let(:path) { hook.hook_root.join('style.css.sass').to_s }
-
-        it 'should be compiled successfully' do
-          Tilt.new(path).render if File.exist?(path)
+            expect {
+              Haml::Engine.new(path.read).render
+            }.to_not raise_error
+          end
         end
       end
     end

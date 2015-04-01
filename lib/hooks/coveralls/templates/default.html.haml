@@ -3,7 +3,7 @@
   coverage_change = coverage_change ? coverage_change : 0.0
 
   label, message = if coverage_change == 0.0
-    [{ type: nil, text: "Unchanged" }, "Coverage remained the same"]
+    [{ type: 'label-default', text: "Unchanged" }, "Coverage remained the same"]
   elsif coverage_change > 0
     [{ type: 'label-success', text: "INCREASES" }, "Coverage has improved (#{coverage_change}%)"]
   else

@@ -18,7 +18,7 @@ module Idobata::Hook
   class Application < Sinatra::Application
     register Sinatra::MultiRoute
 
-    set :idobta_hook_url, ENV['IDOBATA_HOOK_URL']
+    set :idobata_hook_url, ENV['IDOBATA_HOOK_URL']
 
     set :sprockets, Sprockets::Environment.new
 
@@ -48,10 +48,22 @@ module Idobata::Hook
       Idobata::Hook.find(params[:identifier])
     end
 
+    error Idobata::Hook::SkipProcessing do |e|
+      status 200
+
+      e.message
+    end
+
+    error Idobata::Hook::BadRequest do |e|
+      status 422
+
+      e.message
+    end
+
     private
 
     def post_to_idobata(payload)
-      url  = URI(settings.idobta_hook_url)
+      url  = URI(settings.idobata_hook_url)
       post = Net::HTTP::Post.new(url)
 
       post.set_form generate_form(payload), 'multipart/form-data'
