@@ -1,0 +1,10 @@
+%p
+  %span.label.label-info= payload.error.project.name
+  %span.label.label-info= payload.error.environment
+  %span.badge.progress-bar-danger= payload.error.times_occurred
+
+%p
+  %b= payload.error.error_message
+  - if payload.error.last_notice.request_url
+    from
+    %a{href: payload.error.last_notice.request_url}= payload.error.last_notice.request_url
